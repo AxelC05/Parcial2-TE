@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Gestión de incidente · La Preferida</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  color-scheme: light;
+  --bg: #f8fafc;
+  --sf: #ffffff;
+  --sf-card: #ffffff;
+  --ink: #0f172a;
+  --mut: #64748b;
+  --ln: #e2e8f0;
+  --ln-soft: #f1f5f9;
+  
+  /* Brand / Accent colors from Matriz modern theme */
+  --ac: #0ea5e9;
+  --ac-hover: #0284c7;
+  --ac-soft: #e0f2fe;
+  --ac-text: #0369a1;
+  
+  --ok: #10b981;
+  --ok-soft: #d1fae5;
+  --ok-text: #065f46;
+  
+  --bad: #ef4444;
+  --bad-soft: #fee2e2;
+  --bad-text: #991b1b;
+  
+  --hi: #f8fafc;
+  --hi-accent: #f0fdf4;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b0f19;
+    --sf: #111827;
+    --sf-card: #1f2937;
+    --ink: #f9fafb;
+    --mut: #9ca3af;
+    --ln: #374151;
+    --ln-soft: #1f2937;
+    --ac: #38bdf8;
+    --ac-hover: #0ea5e9;
+    --ac-soft: rgba(56, 189, 248, 0.15);
+    --ac-text: #7dd3fc;
+    --ok: #34d399;
+    --ok-soft: rgba(52, 211, 153, 0.15);
+    --ok-text: #a7f3d0;
+    --bad: #f87171;
+    --bad-soft: rgba(248, 113, 113, 0.15);
+    --bad-text: #fca5a5;
+    --hi: #111827;
+    --hi-accent: rgba(16, 185, 129, 0.1);
+  }
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+main{
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+/* Header */
+.header-wrap{
+  margin-bottom: 28px;
+}
+h1{
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.sub{
+  color: var(--mut);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+h2{
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin: 28px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+h3{
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+/* Navigation Tabs */
+#nav{
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--ln);
+  margin-bottom: 24px;
+  padding-bottom: 0;
+}
+#nav button{
+  flex: 1 1 0;
+  text-align: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 12px 18px;
+  cursor: pointer;
+  color: var(--mut);
+  transition: all 0.15s ease;
+  border-radius: 4px 4px 0 0;
+}
+#nav button:hover{
+  color: var(--ink);
+  background: var(--ln-soft);
+}
+#nav button[aria-selected=true]{
+  color: var(--ac);
+  border-bottom-color: var(--ac);
+  font-weight: 700;
+  background: transparent;
+}
+
+/* Sub-nav pills */
+.sn{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 20px;
+}
+.sn button{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--ln);
+  background: var(--sf);
+  color: var(--mut);
+  padding: 7px 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+.sn button:hover{
+  border-color: var(--ac);
+  color: var(--ink);
+}
+.sn button[aria-selected=true]{
+  background: var(--ac);
+  border-color: var(--ac);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.35);
+}
+
+button:focus-visible, input:focus-visible{
+  outline: 2px solid var(--ac);
+  outline-offset: 2px;
+}
+[hidden]{display:none!important}
+
+/* Cards & Grids */
+.cols{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.card{
+  background: var(--sf);
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover{
+  box-shadow: var(--shadow-md);
+}
+.card p{
+  margin: 4px 0 0;
+  color: var(--mut);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.card ul{
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.card li{
+  margin: 6px 0;
+  color: var(--mut);
+  font-size: 0.9rem;
+}
+.card li b{
+  color: var(--ink);
+}
+
+/* Tables */
+.tw{
+  overflow-x: auto;
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-md);
+  background: var(--sf);
+  box-shadow: var(--shadow-sm);
+  margin-top: 8px;
+}
+table{
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 540px;
+}
+th, td{
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--ln);
+}
+th{
+  background: #f1f5f9;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+@media (prefers-color-scheme: dark){
+  th{background: #1f2937;}
+}
+tr:last-child td{
+  border-bottom: 0;
+}
+td:first-child{
+  font-weight: 600;
+  color: var(--ac);
+  white-space: nowrap;
+}
+
+/* Buttons */
+.btn{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ac);
+  background: var(--ac);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(14, 165, 233, 0.2);
+}
+.btn:hover:not(:disabled){
+  background: var(--ac-hover);
+  border-color: var(--ac-hover);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+}
+.btn.o{
+  background: transparent;
+  color: var(--ac);
+  box-shadow: none;
+}
+.btn.o:hover:not(:disabled){
+  background: var(--ac-soft);
+}
+.btn:disabled{
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.sm{
+  font-size: 0.76rem;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+/* Control Panel */
+.panel{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  align-items: center;
+  background: var(--sf);
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.panel b{
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mut);
+  display: block;
+  margin-bottom: 6px;
+}
+.seg{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.seg label{
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  cursor: pointer;
+  background: var(--sf);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+}
+.seg input{
+  margin-right: 6px;
+  accent-color: var(--ac);
+}
+.seg label:has(input:checked){
+  border-color: var(--ac);
+  background: var(--ac-soft);
+  color: var(--ac-text);
+  font-weight: 700;
+}
+
+.ck{
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-left: auto;
+}
+#clk{
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.pr{
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex: 1 1 100%;
+  padding-top: 10px;
+  border-top: 1px solid var(--ln);
+}
+.prog{
+  height: 9px;
+  background: var(--ln);
+  border-radius: 99px;
+  overflow: hidden;
+  flex: 1;
+}
+.prog i{
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 99px;
+  width: 0;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#pt{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--mut);
+}
+
+/* Task Checklist */
+ul.t{
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+ul.t li{
+  display: flex;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--sf);
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+  align-items: flex-start;
+}
+ul.t li:hover{
+  border-color: #cbd5e1;
+}
+ul.t li.done{
+  opacity: 0.55;
+  background: var(--ln-soft);
+}
+ul.t li.done span.x{
+  text-decoration: line-through;
+  color: var(--mut);
+}
+ul.t li.late{
+  border-color: var(--bad);
+  border-left: 5px solid var(--bad);
+  background: var(--bad-soft);
+}
+ul.t input{
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  cursor: pointer;
+  accent-color: var(--ac);
+}
+ul.t label{
+  cursor: pointer;
+  flex: 1;
+}
+.m{
+  display: block;
+  color: var(--mut);
+  font-size: 0.8rem;
+  margin-top: 3px;
+}
+.m b.l{
+  color: var(--bad);
+  font-weight: 700;
+}
+
+/* Templates & Log */
+.tpl pre{
+  white-space: pre-wrap;
+  margin: 8px 0 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.86rem;
+  background: var(--ln-soft);
+  color: var(--ink);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ln);
+  line-height: 1.5;
+}
+.lw{
+  position: relative;
+  margin-top: 10px;
+}
+#log{
+  white-space: pre-wrap;
+  background: var(--sf);
+  border: 1px solid var(--ln);
+  border-radius: var(--radius-md);
+  padding: 14px 150px 14px 16px;
+  min-height: 80px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.86rem;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  line-height: 1.6;
+}
+.lw .copy-btn{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+}
+.ch{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+@media(max-width: 640px){
+  main{padding: 20px 14px 40px}
+  .ck{margin-left: 0; width: 100%; justify-content: space-between}
+  h1{font-size: 1.6rem}
+  #log{padding-top: 48px; padding-right: 16px;}
+}
+</style></head><body><main>
+<div class="header-wrap">
+<h1>Gestión de incidente</h1>
+<p class="sub">Operación del correo ante caída de Microsoft 365</p>
+</div>
+<nav id="nav" role="tablist"><button aria-selected="false" onclick="tab(0)" role="tab">Propuesta</button><button aria-selected="true" onclick="tab(1)" role="tab">Guía de gestión</button></nav>
+<section hidden="" id="s0">
+<h2 style="margin-top:4px">Elementos clave</h2>
+<div class="cols">
+<div class="card"><h3>Coordinación</h3><p>Sucursales, CEDIS y proveedores siguen comunicados durante la caída por canales que no dependen de Microsoft.</p></div>
+<div class="card"><h3>Continuidad</h3><p>Compras, despachos y reabastecimiento siguen operando con SAP, WMS y confirmaciones por teléfono.</p></div>
+<div class="card"><h3>Protección de la información</h3><p>Solo circula información operativa por los canales alternos y los pagos urgentes se verifican por llamada.</p></div>
+<div class="card"><h3>Recursos mínimos</h3><p>Se usa el personal y las herramientas actuales. Solo se agregan dos cuentas de emergencia y buzones alternos para unos 40 usuarios críticos.</p></div>
+</div>
+<h2>Herramientas de contingencia</h2>
+<div class="card" style="padding: 0 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--ln); border-radius: var(--radius-md); background: var(--sf);">
+<div style="padding: 20px 0; border-bottom: 1px solid var(--ln);">
+<h3>1. Canal de crisis fuera de banda</h3>
+<p style="margin: 4px 0 0; color: var(--mut); font-size: 0.9rem; line-height: 1.5;">Llamadas y grupos de mensajería para el Comité de Crisis, cada sucursal y cada CEDIS. No dependen de Microsoft. La lista de contactos se guarda impresa y en los celulares de los responsables.</p>
+</div>
+<div style="padding: 20px 0; border-bottom: 1px solid var(--ln);">
+<h3>2. Correo alterno para usuarios críticos</h3>
+<p style="margin: 4px 0 0; color: var(--mut); font-size: 0.9rem; line-height: 1.5;">Buzones pre-creados en un servicio independiente de Microsoft, con dominio propio de contingencia, para Gerencia, Compras, Finanzas, TI, CEDIS y Logística. Se activan si la caída supera 2 horas.</p>
+</div>
+<div style="padding: 20px 0; border-bottom: 1px solid var(--ln);">
+<h3>3. Cuentas de emergencia</h3>
+<p style="margin: 4px 0 0; color: var(--mut); font-size: 0.9rem; line-height: 1.5;">Dos cuentas administrativas solo en la nube, excluidas del Acceso Condicional normal, con credenciales en caja fuerte. Permiten entrar al centro de administración si falla la sincronización con Active Directory.</p>
+</div>
+<div style="padding: 20px 0; border-bottom: 1px solid var(--ln);">
+<h3>4. Reglas de información</h3>
+<p style="margin: 4px 0 0; color: var(--mut); font-size: 0.9rem; line-height: 1.5;">Durante la contingencia circula solo lo operativo. Todo pago urgente o cambio de datos bancarios se confirma por llamada, porque las caídas atraen intentos de fraude.</p>
+</div>
+<div style="margin: 20px 0; padding: 16px 20px; background: var(--hi-accent); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-sm);">
+<h3 style="color: var(--ok-text); font-size: 0.98rem; margin-bottom: 6px;">Qué puede circular por el canal alterno</h3>
+<ul style="margin: 8px 0 0; padding-left: 20px;">
+<li style="margin: 6px 0; color: var(--mut); font-size: 0.9rem;"><b style="color: var(--ink);">Permitido:</b> avisos operativos, coordinación de despachos y reabastecimiento, estado del incidente y confirmación de pedidos ya registrados en SAP.</li>
+<li style="margin: 6px 0; color: var(--mut); font-size: 0.9rem;"><b style="color: var(--ink);">No permitido:</b> datos de tarjetas, datos personales de clientes, credenciales o códigos MFA, contratos, y cambios de cuentas bancarias sin llamada de verificación.</li>
+</ul>
+</div>
+</div>
+<h2>Puntos de decisión</h2>
+<div class="tw"><table><tbody><tr><th>Momento</th><th>Decisión</th><th>Responsable</th></tr>
+<tr><td>0–15 min</td><td>Confirmar que es una caída de Microsoft y descartar un ataque propio</td><td>Especialista de redes y ciberseguridad</td></tr>
+<tr><td>30 min</td><td>Activar el Comité de Crisis y el canal fuera de banda</td><td>CIO</td></tr>
+<tr><td>2 h</td><td>Activar los buzones del correo alterno</td><td>CIO con Gerente General</td></tr>
+<tr><td>4 h</td><td>Reevaluar con la estimación de Microsoft y ampliar o reducir la contingencia</td><td>Comité de Crisis</td></tr>
+<tr><td>24 h</td><td>Valorar cambiar los registros MX. Los servidores remitentes normalmente reintentan la entrega durante varios días, así que no se cambian salvo que Microsoft no dé fecha de restauración</td><td>Gerente General</td></tr></tbody></table></div>
+</section>
+<section id="s1">
+<div class="panel">
+<div><b>Severidad</b><div class="seg" id="sev">
+<label><input checked="" name="sv" type="radio" value="1"/>Degradado</label><label><input name="sv" type="radio" value="2"/>Caída parcial</label><label><input name="sv" type="radio" value="3"/>Caída total o mayor a 2 h</label></div></div>
+<div class="ck"><span id="clk">00:00:00</span><button class="btn" id="go">Iniciar incidente</button></div>
+<div class="pr"><div aria-label="Avance" class="prog"><i id="pb" style="width: 0%;"></i></div><span id="pt">0 / 8</span></div>
+</div>
+<div class="sn" id="snav" role="tablist"><button aria-selected="true" onclick="gtab(0)" role="tab">Guía</button><button aria-selected="false" onclick="gtab(1)" role="tab">Comunicados</button><button aria-selected="false" onclick="gtab(2)" role="tab">Preparación y roles</button></div>
+<div id="g0">
+<div id="tasks"></div>
+<h2>Bitácora del incidente</h2>
+<div class="lw"><div id="log">La bitácora se llena sola al marcar cada actividad.</div><button class="btn o sm copy-btn" onclick="cp($('log').textContent,this)">Copiar bitácora</button></div>
+</div>
+<div class="tpl" hidden="" id="g1"></div>
+<div hidden="" id="g2">
+<h2 style="margin-top:4px">Preparación</h2>
+<div class="card"><ul id="prep" style="margin:0;padding-left:20px"></ul></div>
+<h2>Roles del Comité de Crisis</h2>
+<div class="tw"><table><tbody><tr><th>Rol</th><th>Responsabilidad</th></tr>
+<tr><td>Gerente General</td><td>Decide activaciones mayores y autoriza aislar sistemas o cambiar el MX</td></tr>
+<tr><td>CIO</td><td>Dirige el incidente y preside el comité</td></tr>
+<tr><td>Gerente de Infraestructura y Operaciones</td><td>Coordina la parte técnica y a los proveedores</td></tr>
+<tr><td>Especialista de redes y ciberseguridad</td><td>Diagnóstico, descarte de ataque y preservación de evidencia</td></tr>
+<tr><td>Líder de soporte POS</td><td>Enlace con sucursales y CEDIS</td></tr>
+<tr><td>Compras y Finanzas</td><td>Enlace con proveedores y verificación de pagos</td></tr>
+<tr><td>Recursos Humanos</td><td>Portavoz interno y comunicados al personal</td></tr></tbody></table></div>
+</div>
+</section>
+<script>
+const $=id=>document.getElementById(id);
+const T=[
+["Detectar y clasificar","Confirmar la caída en el estado de servicios de Microsoft 365, desde una red externa como datos móviles.","Especialista de redes",10,1],
+["Detectar y clasificar","Descartar un ataque propio: inicios de sesión inusuales en Entra ID, reglas de reenvío nuevas y alertas recientes. Si hay indicios, pasar al procedimiento de incidente de seguridad y preservar evidencia.","Especialista de redes",15,1],
+["Detectar y clasificar","Abrir caso con Microsoft y registrar hora de inicio, síntomas y número de caso.","Gerente de Infraestructura",15,1],
+["Detectar y clasificar","Llamar al CIO y asignar la severidad.","Especialista de redes",15,1],
+["Activar la crisis","Convocar al Comité de Crisis por llamada o mensajería, no por correo.","CIO",30,2],
+["Activar la crisis","Designar portavoz y responsable de bitácora.","CIO",30,2],
+["Activar la crisis","Verificar que las cuentas de emergencia permiten entrar al centro de administración.","Gerente de Infraestructura",30,2],
+["Activar la crisis","Redirigir las alertas de seguridad a SMS o llamada para la guardia técnica, porque hoy viajan por correo.","Especialista de redes",45,2],
+["Comunicar","Enviar el aviso inicial a sucursales y CEDIS por los grupos de mensajería (comunicado 1).","Líder de soporte POS",45,2],
+["Comunicar","Llamar a proveedores clave y pedirles reintentar o esperar (comunicado 2).","Compras",90,2],
+["Comunicar","Informar a la Junta y a la Gerencia (comunicado 3).","CIO",60,2],
+["Comunicar","Activar los buzones del correo alterno y entregar claves por llamada.","Gerente de Infraestructura",120,3],
+["Operar en contingencia","Aplicar las reglas de información: nada de datos de tarjetas, datos personales ni credenciales por el canal alterno.","Comité de Crisis",60,2],
+["Operar en contingencia","Verificar por llamada cualquier cambio de cuenta bancaria o pago urgente.","Finanzas",60,2],
+["Operar en contingencia","Sostener compras y despachos con SAP y WMS. Las órdenes críticas se confirman por teléfono.","Compras",120,2],
+["Operar en contingencia","Actualizar al comité cada hora y a las sucursales cada 2 horas.","Portavoz",120,2],
+["Decidir","Reevaluar con la estimación de Microsoft y ampliar o reducir la contingencia.","Comité de Crisis",240,3],
+["Decidir","Si no hay fecha de restauración, valorar el cambio de registros MX con aprobación de Gerencia General.","Gerente General",1440,3],
+["Restaurar","Confirmar el restablecimiento en el estado de servicios y probar envío y recepción.","Especialista de redes",30,1],
+["Restaurar","Revisar mensajes en cola, rebotes y reglas de buzón. Confirmar que no hubo accesos extraños.","Especialista de redes",120,1],
+["Restaurar","Comunicar el fin de la contingencia (comunicado 4), desactivar buzones alternos y rotar claves temporales.","Gerente de Infraestructura",120,2],
+["Cerrar","Preservar bitácora, capturas y números de caso como evidencia.","Responsable de bitácora",1440,1],
+["Cerrar","Reunión de lecciones aprendidas dentro de 5 días hábiles y actualización del procedimiento.","CIO",7200,1]];
+const P=["Cuentas de emergencia creadas, probadas y guardadas en caja fuerte","Dominio de contingencia con SPF y DKIM, y buzones pre-creados para unos 40 usuarios críticos","Directorio de contactos exportado, impreso y guardado en los celulares de los responsables","Grupos de mensajería creados para el comité, cada sucursal y cada CEDIS","Alertas críticas de seguridad enviadas también por SMS o llamada","Procedimiento aprobado por la Gerencia General","Acuerdo con Compras y Finanzas sobre verificación telefónica de pagos"];
+const C=[["1 · Aviso interno a sucursales y CEDIS","AVISO OPERATIVO: el correo corporativo no está disponible por una falla del proveedor desde las [hora]. Las ventas y los sistemas siguen funcionando. Coordine por este grupo o por teléfono. No envíe datos de tarjetas, datos de clientes ni claves por ningún medio. Próxima actualización a las [hora]."],
+["2 · Aviso a proveedores clave","Estimado proveedor: desde las [hora] nuestro correo corporativo presenta una interrupción. Para asuntos urgentes llámenos al [teléfono] o escriba a [correo alterno]. No confirmaremos cambios de cuentas bancarias por correo; cualquier cambio requiere llamada de verificación."],
+["3 · Resumen para Junta y Gerencia","Resumen del incidente: caída del servicio de correo de Microsoft 365 desde las [hora]. Severidad [1-3]. Impacto: comunicación interna y con proveedores; ventas y ERP sin afectación. Acciones: comité activado, canal alterno en uso, caso [número] abierto con Microsoft. Próxima actualización: [hora]."],
+["4 · Fin de la contingencia","AVISO: el correo corporativo fue restablecido a las [hora]. Retome el uso normal. Los buzones alternos se desactivan hoy. Si ve mensajes sospechosos o accesos que no reconoce, repórtelo al [contacto de TI]."]];
+let st="idle",t0=0,tEnd=0,iv=null,done={},logs=[];
+const fmt=s=>[s/3600|0,(s%3600)/60|0,s%60].map(x=>String(x).padStart(2,"0")).join(":");
+const sv=()=>+document.querySelector('[name=sv]:checked').value;
+const el=()=>st=="idle"?0:((st=="done"?tEnd:Date.now())-t0)/1000|0;
+const lim=m=>m>=1440?m/1440+" d":m>=60?m/60+" h":m+" min";
+const EMPTY="La bitácora se llena sola al marcar cada actividad.";
+function cp(x,b){const f=()=>{const a=document.createElement("textarea");a.value=x;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove()};
+(navigator.clipboard?navigator.clipboard.writeText(x).catch(f):Promise.resolve(f()));const o=b.textContent;b.textContent="Copiado";setTimeout(()=>b.textContent=o,1200)}
+function showLog(){logs.sort((a,b)=>a[1]-b[1]);$("log").textContent=logs.map(x=>`T+${fmt(x[1]).slice(0,5)} · ${x[0]==-1?"Incidente iniciado":x[0]==-2?"Todas las actividades completadas. Incidente cerrado.":T[x[0]][1]}`).join("\n")||EMPTY}
+function btn(){const b=$("go");b.textContent=st=="idle"?"Iniciar incidente":st=="run"?"Incidente en curso":"Reiniciar guía";b.disabled=st=="run"}
+function start(){st="run";t0=Date.now();iv=setInterval(tick,1000);logs.push([-1,0])}
+function finish(){tEnd=Date.now();st="done";clearInterval(iv);logs.push([-2,el()])}
+function resume(){t0+=Date.now()-tEnd;st="run";iv=setInterval(tick,1000);logs=logs.filter(x=>x[0]!=-2)}
+function reset(){clearInterval(iv);st="idle";done={};logs=[];draw()}
+function draw(){let ph="",h="",n=0,d=0;
+T.forEach((r,k)=>{if(r[4]>sv())return;n++;if(done[k])d++;
+if(r[0]!=ph){h+=(ph?"</ul>":"")+`<h2>${r[0]}</h2><ul class="t">`;ph=r[0]}
+h+=`<li id="t${k}" class="${done[k]?"done":""}"><input type="checkbox" id="c${k}" ${done[k]?"checked":""} onchange="chk(${k},this.checked)"><label for="c${k}"><span class="x">${r[1]}</span><span class="m">${r[2]} · meta: ${lim(r[3])}<b class="l"></b></span></label></li>`});
+$("tasks").innerHTML=h+"</ul>";$("pb").style.width=(n?d/n*100:0)+"%";$("pt").textContent=d+" / "+n;
+if(st=="run"&&n&&d==n)finish();else if(st=="done"&&d<n)resume();
+btn();showLog();tick()}
+function chk(k,v){if(st=="idle")start();done[k]=v;logs=logs.filter(x=>x[0]!=k);if(v)logs.push([k,el()]);draw()}
+function tick(){$("clk").textContent=fmt(el());T.forEach((r,k)=>{const e=$("t"+k);if(!e)return;const late=st=="run"&&!done[k]&&el()>r[3]*60;e.classList.toggle("late",late);e.querySelector(".l").textContent=late?" · vencida":""})}
+$("go").onclick=()=>{if(st=="idle"){start();draw()}else if(st=="done")reset()};
+document.querySelectorAll("[name=sv]").forEach(i=>i.onchange=draw);
+$("g1").innerHTML="<h2 style='margin-top:4px'>Comunicados listos para usar</h2>"+C.map((c,k)=>`<div class="card" style="margin-bottom:12px"><div class="ch"><h3>${c[0]}</h3><button class="btn o sm" onclick="cp($('p${k}').textContent,this)">Copiar texto</button></div><pre id="p${k}">${c[1]}</pre></div>`).join("")+"<p class='sub' style='font-size:.82rem;margin-top:8px'>Complete los textos entre corchetes antes de enviar. Se envían por mensajería, llamada o correo alterno, nunca por el correo caído.</p>";
+$("prep").innerHTML=P.map(p=>`<li style="margin: 6px 0; color: var(--mut);"><b style="color: var(--ink);">${p}</b></li>`).join("");
+function mk(nav,names,fn,selectedIdx=0){$(nav).innerHTML=names.map((t,k)=>`<button role="tab" aria-selected="${k==selectedIdx}" onclick="${fn}(${k})">${t}</button>`).join("")}
+function sel(nav,k){[...$(nav).children].forEach((b,i)=>b.setAttribute("aria-selected",i==k))}
+mk("nav",["Propuesta","Guía de gestión"],"tab",1);mk("snav",["Guía","Comunicados","Preparación y roles"],"gtab",0);
+function tab(k){[0,1].forEach(i=>$("s"+i).hidden=i!=k);sel("nav",k)}
+function gtab(k){[0,1,2].forEach(i=>$("g"+i).hidden=i!=k);sel("snav",k)}
+tab(1);
+draw();
+</script></main>
+</body></html>
